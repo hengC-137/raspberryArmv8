@@ -1,8 +1,8 @@
 #include <time.h>
 #include <stdio.h>
 
-#define LOOP(1e9)
-#define OP_FLOATS(80)
+#define LOOP (1e9)
+#define OP_FLOATS (80)
 
 void TEST(int);
 
@@ -12,7 +12,7 @@ static double get_time(struct timespec *start, struct timespec *end){
 
 int main() {
     struct timespec start, end;
-    double tiem_used = 0.0;
+    double time_used = 0.0;
 
     clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 

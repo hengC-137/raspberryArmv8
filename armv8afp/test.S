@@ -18,5 +18,5 @@ TEST:
     fmla        v8.4s, v8.4s, v8.4s
     fmla        v9.4s, v9.4s, v9.4s
 
-    subs        r0, r0, #1
+    subs        x0, x0, #1
     bne         .loop2
