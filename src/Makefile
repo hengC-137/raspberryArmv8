@@ -7,9 +7,10 @@ TOP_DIR = .
 
 TARGET_EXE = unit_test
 
-CXX_SOURCE += $(TOP_DIR)/src/test_matrix_multiply.cpp
+CXX_SOURCE += $(TOP_DIR)/test_matrix_multiply.cpp
 
 EP_INC_DIR += -I$(TOP_DIR)/
+
 
 OBJ_CPP := $(patsubst %.cpp, %.o, $(CXX_SOURCE))
 OBJ_C := $(patsubst %.c, %.o, $(C_SOURCE))
