@@ -4,6 +4,12 @@
 #include <iostream>
 
 #include "MMult0.h"
+//#include "MMult1.h"
+//#include "MMult2.h"
+#include "MMult3.h"
+//#include "MMult3_1.h"
+//#include "MMult4.h"
+
 
 #include "dclock.h"
 using namespace std;
@@ -18,7 +24,8 @@ void random_matrix( int m, int n, float *a, int lda )
 
     for(int i=0; i<m; i++){
         for(int j=0; j<n; j++){
-            A(i, j) = (float)drand48();
+            // A(i, j) = (float)drand48();
+            A(i, j) = i * n + j;
         }
     }
 }
@@ -40,11 +47,13 @@ float compare_matrices( int m, int n, float *a, int lda, float *b, int ldb )
     float max_diff = 0.0, diff;
     for (int i=0; i<m; i++ ){
         for (int j=0; j<n; j++ ){
+
             diff = abs(A(i, j) - B(i, j));
             
             max_diff = max(diff, max_diff);
 
             if(max_diff > 0.5f || max_diff < -0.5f) {
+            	//printf("row: %d  col: %d   A: %f  B: %f \n", i, j, A(i, j), B(i, j));
                 printf("\n error: i %d  j %d diff %f", i, j, max_diff);
             }
         }
@@ -59,7 +68,7 @@ static double get_time(struct timespec *start, struct timespec *end) {
 
 int m, n, k, lda, ldb, ldc;
 
-double time_tmp, time_best, gflops, diff;
+double time_tmp, time_best, time_all, time_avg, gflops, diff;
 
 float *a, *b, *c, *prec, *nowc;    
 
@@ -94,22 +103,24 @@ int main(){
         MatrixMultiply(m, n, k, a, lda, b, ldb, nowc, ldc);
 
         // 循环20次，以最快的运行时间为结果
-        for(int j=0; j < 20; j++){
+        time_all = 0;
+        for(int j=0; j < 50; j++){
             
             copy_matrix(m, n, prec, ldc, c, ldc);
 
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
-            MatrixMultiply(m, n, k, a, lda, b, ldb, c, ldc);
+            MY_MMult_1x4_3(m, n, k, a, lda, b, ldb, c, ldc);
 
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
             time_tmp = get_time(&start, &end);
-            
-            if(j == 0)
-                time_best = time_tmp;
-            else
-                time_best = min(time_best, time_tmp);
+
+            time_all += time_tmp;
+//            if(j == 0)
+//                time_best = time_tmp;
+//            else
+//                time_best = min(time_best, time_tmp);
         }
 
         diff = compare_matrices(m, n, c, ldc, nowc, ldc);
@@ -117,8 +128,8 @@ int main(){
         if(diff > 0.5f || diff < -0.5f){
             exit(0);
         }
-
-        printf("%d %le %le \n", i, gflops / time_best, diff);
+        time_avg = time_all / 50;
+        printf("%d %le %le \n", i, gflops / time_avg, diff);
         fflush(stdout);
 
         free(a);

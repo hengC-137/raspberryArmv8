@@ -18,7 +18,9 @@ void AddDot( int k, float *x, int incx,  float *y, float *gamma )
     int p;
 
     for ( p=0; p<k; p++ ){
-        *gamma += *(x + p) * *y;
+	//printf("A = %f   B = %f \n", *(x), *(y));
+        *gamma += (*x) * (*y);
+        x ++;
         y += incx;     
     }
 }
@@ -45,19 +47,22 @@ void MY_MMult_1x4_3( int m, int n, int k, float *a, int lda,
                                     float *b, int ldb,
                                     float *c, int ldc )
 {
+    //printf("3_1\n");
     int i, j;
-    float *pa = a;
     float *pb = b;
     for ( j=0; j<n; j+=4 ){        /* Loop over the columns of C, unrolled by 4 */
-        float *pc = c;
+        float *pc = (c + j);
+    	float *pa = a;
         for ( i=0; i<m; i+=1 ){        /* Loop over the rows of C */
             /* Update C( i,j ), C( i,j+1 ), C( i,j+2 ), and C( i,j+3 ) in
             one routine (four inner products) */
 
-            AddDot1x4( k, pa, lda, &B( 0,j ), ldb, &C( i,j ), ldc );
+            //printf("C row = %d, col = %d\n", i, j);
+
+            AddDot1x4( k, pa, lda, pb, ldb, pc, ldc );
             pa += lda;
-            pb ++;
             pc += ldc;
         }
+        pb += 4;
     }
 }
