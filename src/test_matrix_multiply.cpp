@@ -6,9 +6,12 @@
 #include "MMult0.h"
 //#include "MMult1.h"
 //#include "MMult2.h"
-#include "MMult3.h"
+//#include "MMult3.h"
 //#include "MMult3_1.h"
 //#include "MMult4.h"
+#include "MMult5.h"
+//#include "MMult_1x4_7.h"
+//#include "MMult_1x4_8.h"
 
 
 #include "dclock.h"
@@ -24,8 +27,8 @@ void random_matrix( int m, int n, float *a, int lda )
 
     for(int i=0; i<m; i++){
         for(int j=0; j<n; j++){
-            // A(i, j) = (float)drand48();
-            A(i, j) = i * n + j;
+            A(i, j) = (float)drand48();
+            // A(i, j) = i * n + j;
         }
     }
 }
@@ -53,8 +56,8 @@ float compare_matrices( int m, int n, float *a, int lda, float *b, int ldb )
             max_diff = max(diff, max_diff);
 
             if(max_diff > 0.5f || max_diff < -0.5f) {
-            	//printf("row: %d  col: %d   A: %f  B: %f \n", i, j, A(i, j), B(i, j));
-                printf("\n error: i %d  j %d diff %f", i, j, max_diff);
+            	printf("row: %d  col: %d   A: %f  B: %f \n", i, j, A(i, j), B(i, j));
+                //printf("\n error: i %d  j %d diff %f", i, j, max_diff);
             }
         }
     }
@@ -110,7 +113,7 @@ int main(){
 
             clock_gettime(CLOCK_MONOTONIC_RAW, &start);
 
-            MY_MMult_1x4_3(m, n, k, a, lda, b, ldb, c, ldc);
+            MY_MMult_1x4_5(m, n, k, a, lda, b, ldb, c, ldc);
 
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);
 
